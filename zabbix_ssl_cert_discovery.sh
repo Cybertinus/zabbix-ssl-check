@@ -31,7 +31,7 @@ function to_json_objects() {
 
 	# Find the certificates for Apache, if it is installed
 	if [ -n "${apacheconfdir}" ] ; then
-		to_json_objects "$(grep -r SSLCertificateFile /etc/apache2 | grep -v 'default-ssl.conf' | awk '!/#/ {print $3}' | sort | uniq)"
+		to_json_objects "$(grep -r SSLCertificateFile "${apacheconfdir}" 2> /dev/null | grep -v 'default-ssl.conf' | awk '!/#/ {print $3}' | sort | uniq)"
 	fi
 
 	#########
@@ -39,7 +39,7 @@ function to_json_objects() {
 	#########
 	# Find the certificates for Nginx, if it is installed
 	if [ -d "/etc/nginx" ] ; then
-		to_json_objects "$(grep -r ssl_certificate /etc/nginx/ | awk '!/ssl_certificate_key/ {print $3}' | sed 's/;$//' | sort | uniq)"
+		to_json_objects "$(grep -r ssl_certificate /etc/nginx/ 2> /dev/null | awk '!/ssl_certificate_key/ {print $3}' | sed 's/;$//' | sort | uniq)"
 	fi
 
 	# JSON end
