@@ -38,12 +38,9 @@ The installation of these scripts is as follows:
 
    which gave me the following result:
 
-   ```  
-   ### Option: ExternalScripts
-# ExternalScripts=${datadir}/zabbix/externalscripts
-ExternalScripts=/usr/lib/zabbix/externalscripts  
-```
-So I need to go to `/usr/lib/zabbix/externalscripts/`
+   `ExternalScripts=/usr/lib/zabbix/externalscripts`
+   
+   So I need to go to `/usr/lib/zabbix/externalscripts/`
 3. Upload the scripts starting with `sslcert_` to this directory (scp, sftp, copy and paste via an editor, whatever works for you)
 4. Give the scripts the correct permissions:
 
