@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-04-12T13:55:48Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template SSL services</template>
+            <name>Template SSL services</name>
+            <description>Automatically list all the SSL certificates configured in a daemon, and add alerting on expire dates to them</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>SSL Certificates</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Configured SSL certificates</name>
+                    <key>ssl.certs.discovery</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Expire date for {#CERTNAME}</name>
+                            <key>ssl.cert.expiredate[{#CERTPATH}]</key>
+                            <delay>1d</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>SSL Certificates</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Seconds still valid for {#CERTNAME}</name>
+                            <key>ssl.cert.secondsvalid[{#CERTPATH}]</key>
+                            <delay>1d</delay>
+                            <description>This specifies the number of seconds that the certificate is still valid, so Zabbix can calculate how low it is still valid, and fire the correct triggers if needed.</description>
+                            <applications>
+                                <application>
+                                    <name>SSL Certificates</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last(0)} &lt; {$WARNINGTIME_SEC} and {last(0)} &gt; 0</expression>
+                                    <name>SSL Certificate {#CERTNAME} on {HOST.NAME} is about to expire</name>
+                                    <priority>WARNING</priority>
+                                    <description>The Certificate {#CERTNAME} on {HOST.NAME} is about to expire. Take action to prevent users from getting expired SSL cert errors.</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{last(0)}=0</expression>
+                                    <name>SSL Certificate {#CERTNAME} on {HOST.NAME} is expired</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>SSL Certificate ID for {#CERTNAME}</name>
+                            <key>ssl.cert.serial[{#CERTPATH}]</key>
+                            <delay>1d</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>SSL Certificates</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Expire date for {#CERTNAME} via external check</name>
+                            <type>EXTERNAL</type>
+                            <key>sslcert_expiredate.sh[{#CERTNAME}, {#CHECKTYPE}]</key>
+                            <delay>1d</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>SSL Certificates</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Seconds still valid for {#CERTNAME} via external check</name>
+                            <type>EXTERNAL</type>
+                            <key>sslcert_secondsvalid.sh[{#CERTNAME}, {#CHECKTYPE}]</key>
+                            <delay>1d</delay>
+                            <applications>
+                                <application>
+                                    <name>SSL Certificates</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last(0)} &lt; {$WARNINGTIME_SEC} and {last(0)} &gt; 0</expression>
+                                    <name>SSL Certificate {#CERTNAME} is about to expire</name>
+                                    <priority>WARNING</priority>
+                                    <description>The Certificate {#CERTNAME} is about to expire. Take action to prevent users from getting expired SSL cert errors.</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{last(0)}=0</expression>
+                                    <name>SSL Certificate {#CERTNAME} is expired</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>SSL Certificate ID for {#CERTNAME} via external check</name>
+                            <type>EXTERNAL</type>
+                            <key>sslcert_serial.sh[{#CERTNAME}, {#CHECKTYPE}]</key>
+                            <delay>1d</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>SSL Certificates</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>{Template SSL services:ssl.cert.serial[{#CERTPATH}].last(0)}&lt;&gt;{Template SSL services:sslcert_serial.sh[{#CERTNAME}, {#CHECKTYPE}].last(0)}</expression>
+                            <name>SSL Certificate for {#CERTNAME} has a different certificate on disk than provided via the service</name>
+                            <priority>AVERAGE</priority>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$WARNINGTIME_SEC}</macro>
+                    <value>604800</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>
