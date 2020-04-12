@@ -22,4 +22,4 @@ domainname="${1}"
 service="${2}"
 
 # Extract the expire timestamp from the actual webserver
-openssl s_client -servername "${domainname}" -connect "${domainname}":"${service}" < /dev/null 2> /dev/null | openssl x509 -text | awk -F: '/Not After/ {gsub(/^ /, "", $2); print $2 ":" $3 ":" $4}'
+openssl s_client -servername "${domainname}" -connect "${domainname}":"${service}" < /dev/null 2> /dev/null | openssl x509 -noout -enddate | cut -d '=' -f 2

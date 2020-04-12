@@ -20,7 +20,7 @@ if [ "${?}" -ne 0 ] ; then
 fi
 
 # Extract the expire time from the certificate, but still in human readable form
-expire_string="$(openssl x509 -in "${certpath}" -noout -text | grep 'Not After' | cut -d ':' -f 2- | sed 's/^ //')"
+expire_string="$(openssl x509 -in "${certpath}" -noout -enddate | cut -d '=' -f 2)"
 # Convert the expire time to an epoch timestamp
 expire_timestamp="$(date --date="${expire_string}" +%s)"
 # Find the current epoch timestamp

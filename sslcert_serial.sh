@@ -22,4 +22,4 @@ domainname="${1}"
 service="${2}"
 
 # Extract the serial number from the actual service
-openssl s_client -servername "${domainname}" -connect "${domainname}":"${service}" < /dev/null 2> /dev/null | openssl x509 -text | grep -A 1 'Serial Number' | tail -n 1 | awk '{print $1}'
+openssl s_client -servername "${domainname}" -connect "${domainname}":"${service}" < /dev/null 2> /dev/null | openssl x509 -noout -serial | cut -d '=' -f 2

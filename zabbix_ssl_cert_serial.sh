@@ -20,4 +20,4 @@ if [ "${?}" -ne 0 ] ; then
 fi
 
 # Extract the expire time from the certificate, and output the human readable form
-openssl x509 -in "${certpath}" -noout -text | grep -A 1 'Serial Number' | tail -n 1 | awk '{print $1}'
+openssl x509 -in "${certpath}" -noout -serial | cut -d '=' -f 2

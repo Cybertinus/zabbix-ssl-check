@@ -20,4 +20,4 @@ if [ "${?}" -ne 0 ] ; then
 fi
 
 # Extract the expire time from the certificate, and output the human readable form
-openssl x509 -in "${certpath}" -noout -text | grep 'Not After' | cut -d ':' -f 2- | sed 's/^ //'
+openssl x509 -in "${certpath}" -noout -enddate | cut -d '=' -f 2

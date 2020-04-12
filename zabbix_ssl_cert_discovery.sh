@@ -7,7 +7,7 @@ trap "rm -rf "${tempfile}";" EXIT SIGINT SIGTERM SIGKILL
 
 function to_json_objects() {
 	for certpath in ${1}; do
-		certname="$(openssl x509 -in "${certpath}" -noout -text | awk '/Subject: CN = / {print $4}')"
+		certname="$(openssl x509 -in "${certpath}" -noout -subject | sed -ne 's/^.*CN[ ]*=[ ]*//p')"
 		echo -n "${certpath}" | sed "s/^/{\"{#CERTPATH}\": \"/;s/$/\", \"{#CERTNAME}\": \"${certname}\", \"{#CHECKTYPE}\": \"${2}\"},/"
 	done
 
