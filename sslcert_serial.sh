@@ -5,7 +5,7 @@ if [ "${#}" -ne 2 ] ; then
 	echo 'Invalid number of arguments given, the first argument should be a domain name, the second one the type of check you want to perform' 1>&2
 	exit 1
 # Check if the specified check is a portnummer in /etc/services
-elif [ -z "$(grep "^${2} " /etc/services)" ] ; then
+elif [ -z "$(grep "^${2}[[:blank:]]" /etc/services)" ] ; then
 	echo "Unsupported check '${2}' specified, please specify a portname from /etc/services" 1>&2
 	exit 2
 fi
